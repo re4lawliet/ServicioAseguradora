@@ -1,0 +1,61 @@
+<div class="col-md-4 mx-auto">
+  <div class="card text-center">
+    <div class="card-header">
+      <h3>Ingreso de Vehiculo</h3>
+    </div>
+    <div class="card-body">
+      <form action="/vehiculos/crear_vehiculo" method="POST">
+        Tipo de Vehiculo
+        <div class="form-group">
+            <select type="text" name="tipo" >
+                <option value="Automovil" >Automovil</option>
+                <option value="Moto" >Moto</option>
+                <option value="Camioneta" >Camioneta</option>
+                <option value="Bus" >Bus</option>
+                <option value="Tractor" >Tractor</option>
+                <option value="Camion" >Camion</option>
+            </select>
+        </div>
+       Marca del Vehiculo
+        <div class="form-group">
+            <select type="text" name="marca" >
+                <option value="Honda" >Honda</option>
+                <option value="Toyota" >Toyota</option>
+                <option value="Lexus" >Lexus</option>
+                <option value="Subaru" >Subaru</option>
+                <option value="Mitsubishi" >Mitsubishi</option>
+                <option value="Nissan" >Nissan</option>
+                <option value="Mazda" >Mazda</option>
+            </select>
+        </div>
+        <div class="form-group">
+          <input type="text" name="linea" class="form-control" placeholder="Linea de Vehiculo" autofocus/>
+        </div>
+        <div class="form-group">
+          <input type="text" name="modelo" class="form-control" placeholder="Modelo de Vehiculo" autofocus/>
+        </div>
+        <div class="form-group">
+          <input type="text" name="placa" class="form-control" placeholder="Placa del Vehiculo" autofocus/>
+        </div>
+        <div class="form-group">
+          <input type="text" name="chasis" class="form-control" placeholder="Chasis" autofocus/>
+        </div>
+        <div class="form-group">
+          <input type="text" name="motor" class="form-control" placeholder="Motor" autofocus/>
+        </div>
+        <div class="form-group">
+          <input type="text" name="color" class="form-control" placeholder="Color" autofocus/>
+        </div>
+        <div class="form-group">
+          <textarea name="direccion" class="form-control" placeholder="Direccion para Recoger"></textarea>
+        </div>
+                  
+        <div class="form-group">
+          <button class="btn btn-primary btn-block" type="submit">
+            Guardar Vehiculo
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

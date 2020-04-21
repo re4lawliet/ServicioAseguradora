@@ -1,0 +1,30 @@
+<div class="row">
+  {{#each vehiculos2 }}
+    <div class="col-md-3">
+        <div class="card">
+        <div class="card-body">
+            <h4 class="card-title d-flex justify-content-between align-items-center">
+            {{ tipo }},{{ marca }} <a href="/vehiculos/edit/{{id}}"><i class="fas fa-camera"></i></a>                
+            </h4>
+            <a href="/vehiculos/edit/{{id}}"><i class="fas fa-image"></i></a>
+           
+            <p> {{ color }},{{ modelo }}, {{ motor }},{{ placa }} </p>
+            <!-- DELETE REQUEST -->
+            <form action="/vehiculos/delete/{{id}}?_method=DELETE" method="POST">
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit" class="btn btn-danger btn-block btn-sm">Delete</button>
+            </form>
+            
+        </div>
+        </div>
+    </div>
+  {{else}}
+  <div class="card mx-auto">
+    <div class="card-body">
+      <h1>Hola </h1>
+      <p clsss="lead">No has creado ningun vehiculo.</p>
+      <a href="/vehiculos/nuevo_vehiculo" class="btn btn-success btn-block">Create Uno!</a>
+    </div>
+  </div>
+  {{/each}}
+</div>
