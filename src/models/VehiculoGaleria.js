@@ -7,34 +7,10 @@ const VehiculoGaleriaSchema = new Schema(
             type: String,
             required: true
         },
-        foto1: {
+        foto: {
             type: String,
         },
-        foto2: {
-            type: String,
-        },
-        foto3: {
-            type: String,
-        },
-        foto4: {
-            type: String
-        },
-        foto5: {
-            type: String
-        },
-        estado1: {
-            type: Boolean
-        },
-        estado2: {
-            type: Boolean
-        },
-        estado3: {
-            type: Boolean
-        },
-        estado4: {
-            type: Boolean
-        },
-        estado5: {
+        estado: {
             type: Boolean
         },
         date: {

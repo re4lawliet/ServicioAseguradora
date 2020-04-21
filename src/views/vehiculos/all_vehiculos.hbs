@@ -4,13 +4,13 @@
         <div class="card">
         <div class="card-body">
             <h4 class="card-title d-flex justify-content-between align-items-center">
-            {{ tipo }},{{ marca }} <a href="/vehiculos/edit/{{id}}"><i class="fas fa-camera"></i></a>                
+            {{ tipo }},{{ marca }} <a href="/vehiculos/edit/{{_id}}"><i class="fas fa-camera"></i></a>                
             </h4>
-            <a href="/vehiculos/edit/{{id}}"><i class="fas fa-image"></i></a>
+            <a href="/vehiculos/ver/{{_id}}"><i class="fas fa-image"></i></a>
            
             <p> {{ color }},{{ modelo }}, {{ motor }},{{ placa }} </p>
             <!-- DELETE REQUEST -->
-            <form action="/vehiculos/delete/{{id}}?_method=DELETE" method="POST">
+            <form action="/vehiculos/delete/{{_id}}?_method=DELETE" method="POST">
             <input type="hidden" name="_method" value="DELETE">
             <button type="submit" class="btn btn-danger btn-block btn-sm">Delete</button>
             </form>

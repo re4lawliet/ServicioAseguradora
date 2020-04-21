@@ -1,0 +1,28 @@
+<div class="col-md-4 mx-auto">
+  <div class="card text-center">
+    <div class="card-header">
+      <h3>Informacion de Vehiculo</h3>
+    </div>
+    <div class="card-body">
+        {{#each vehiculos2}}
+        <b>Tipo:</b> {{tipo}}
+        <b>Marca:</b> {{marca}}
+        <b>Linea:</b> {{linea}}
+        <b>Modelo:</b>{{modelo}}
+        <b>Placa:</b>{{placa}}
+        <b>Chasis:</b>{{chasis}}
+        <b>Motor:</b>{{motor}}
+        <b>Color:</b>{{color}}
+        <b>Direccion:</b>{{direccion}}
+        {{/each}}
+         <br>
+         <br>
+        {{#each galeria2 }}
+        <img class="rounded mx-auto d-block" width="300" height="300" src="/img/{{foto}}" alt="Logo">
+        <br>
+        <br>
+        {{/each}}
+    </div>
+  </div>
+</div>
+ 

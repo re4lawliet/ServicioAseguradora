@@ -5,6 +5,8 @@ const methodOverride = require('method-override');
 const session =  require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
+const multer = require('multer');
+const upload = multer({dest: 'uploads/'});
 
 //Inicializaciones
 const app = express();
@@ -51,6 +53,8 @@ app.use(require('./routes/vehiculos.js'));
 
 // Static Filesa
 app.use(express.static(path.join(__dirname, 'public')));
+
+
 
 // Server is Listening
 app.listen(app.get('port'), ()=> {

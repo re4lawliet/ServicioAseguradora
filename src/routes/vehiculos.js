@@ -3,18 +3,22 @@ const express = require('express');
 const router =  express.Router();
 const fetch = require('node-fetch');
 const fetchQuery = require('../request-manager');
+const multer = require('multer');
+const upload = require('../config/storage');
 
 
 const Vehiculo = require('../models/Vehiculo');
 const VehiculoGaleria = require('../models/VehiculoGaleria');
 const { isAuthenticated } = require('../helpers/auth');
+const app = express();
 
-//Funcion para lanzar formulariode Nueva Nota
+
+//************       Metodos de Funcionalidad   *************************/
+
 router.get('/vehiculos/nuevo_vehiculo', isAuthenticated, (req, res) => {
     res.render('vehiculos/new_vehiculo.hbs');
 });
 
-//Funcion para enviar datos de nueva nota [POST]
 router.post('/vehiculos/crear_vehiculo', isAuthenticated, async(req, res) => {
     
     const{ tipo,marca,linea,modelo,placa,chasis,motor,color,direccion } = req.body;
@@ -45,13 +49,14 @@ router.post('/vehiculos/crear_vehiculo', isAuthenticated, async(req, res) => {
         res.redirect('/vehiculos/all');
     }
 });
-router.get('/vehiculos/all', async(req, res) => {
-    /*const vehiculos = await Vehiculo.find({id_ajustador: req.user.id}).sort({date:'desc'})
+
+router.get('/vehiculos/all', isAuthenticated, async(req, res) => {
+    const vehiculos = await Vehiculo.find({id_ajustador: req.user.id}).sort({date:'desc'})
     const vehiculos2=[];
     
     for(var v in vehiculos){
         vehiculos2.push({
-            id: vehiculos[v]._id, tipo:vehiculos[v].tipo, marca:vehiculos[v].marca,
+            _id: vehiculos[v]._id, tipo:vehiculos[v].tipo, marca:vehiculos[v].marca,
             linea:vehiculos[v].linea, modelo:vehiculos[v].modelo, placa:vehiculos[v].placa,
             chasis:vehiculos[v].chasis, motor:vehiculos[v].motor, color:vehiculos[v].color,
             direccion: vehiculos[v].direccion
@@ -59,43 +64,107 @@ router.get('/vehiculos/all', async(req, res) => {
     }
     res.render('vehiculos/all_vehiculos.hbs', { 
         vehiculos2 
-    });*/
-
-    fetchQuery('http://localhost:3000/vehiculos/all2', 'GET').then(res2 => {
-
-      if (res2.success) {
-        console.log(res2);
-        res.send(res2);
-      } else {
-        console.log('No hay repartidores disponibles');
-      }
-
     });
-});
-
-router.get('/vehiculos/all2', async(req, res) => {
-    const vehiculos = await Vehiculo.find().sort({date:'desc'})
-    res.send(vehiculos);
+    /*
+    fetch("http://localhost:3000/vehiculos/all2", {
+        method: "get",
+        headers: { "Content-Type": "application/json" },
+        timeout: 3000,
+    })
+    .then((res) => res.json())
+    .then((json) =>
+      res.render("vehiculos/all_vehiculos.hbs", { vehiculos2: json })
+    )
+    .catch(function (err) {
+      return res
+        .status(500)
+        .json({ estado: 500, mensaje: "Tiempo de respuesta exedido." });
+    });
+    */
 });
 
 router.get('/vehiculos/edit/:id', isAuthenticated, async(req, res) => {
-    const note1 = await Note.findById(req.params.id);
-
-    const note=[];
-    note.push({
-        title: note1.title, 
-        description: note1.description, 
-        _id:note1._id
+    const veh=[];
+    veh.push({
+        id_vehiculo: req.params.id
     });
-    res.render('notes/edit-note.hbs', {note});
+    res.render('vehiculos/edit_vehiculo.hbs', {veh});
 });
 
-router.put('/notas/edit-note/:id', isAuthenticated, async(req, res) => {
-    const {title, description} = req.body;
-    await Note.findByIdAndUpdate(req.params.id, {title, description});
-    req.flash('succes_msg','Se a Actualizada');
-    res.redirect('/notas/notas');
+router.post('/subir/:id', upload.single('foto1'), async(req,res) =>{
+    
+    const{ foto,estado } = req.body;
+
+    const new_imagen = new VehiculoGaleria();
+    new_imagen.id_vehiculo = req.params.id;
+    new_imagen.foto = req.file.originalname;
+    new_imagen.estado = req.body.foto1_e;
+    await new_imagen.save();
+
+    req.flash('succes_msg', 'Imagen Subida Con Exito');
+    res.redirect('/vehiculos/all');
 });
+
+router.get('/vehiculos/ver/:id', isAuthenticated, async(req, res) => {
+    console.log(req.user.id);
+    const galeria = await VehiculoGaleria.find({id_vehiculo: req.params.id}).sort({date:'desc'})
+    const galeria2=[];
+
+    const vehiculos = await Vehiculo.find({_id: req.params.id}).sort({date:'desc'})
+    const vehiculos2=[];
+    
+    for(var v in vehiculos){
+        vehiculos2.push({
+            _id: vehiculos[v]._id, tipo:vehiculos[v].tipo, marca:vehiculos[v].marca,
+            linea:vehiculos[v].linea, modelo:vehiculos[v].modelo, placa:vehiculos[v].placa,
+            chasis:vehiculos[v].chasis, motor:vehiculos[v].motor, color:vehiculos[v].color,
+            direccion: vehiculos[v].direccion
+        });
+    }
+
+    for(var g in galeria){
+        galeria2.push({
+            foto: galeria[g].foto
+        });
+    }
+    
+    console.log(vehiculos2);
+    console.log(galeria2);
+
+    res.render('vehiculos/see_vehiculos.hbs', { 
+        vehiculos2,
+        galeria2 
+    });
+});
+
+
+
+//************       Metodos de Servicio     ******************************/
+
+router.get('/vehiculos/all3', isAuthenticated, async(req, res) => {
+
+    fetch("http://localhost:3000/vehiculos/all2", {
+        method: "get",
+        headers: { "Content-Type": "application/json" },
+        timeout: 3000,
+    })
+    .then((res) => res.json())
+    .then((json) =>
+      res.render("vehiculos/all_vehiculos.hbs", { vehiculos2: json })
+    )
+    .catch(function (err) {
+      return res
+        .status(500)
+        .json({ estado: 500, mensaje: "Tiempo de respuesta exedido." });
+    });
+    
+});//Consume 
+router.get('/vehiculos/all2', isAuthenticated, async(req, res) => {
+    const vehiculos = await Vehiculo.find({id_ajustador: req.user.id}).sort({date:'desc'});
+    res.send(vehiculos);
+});//sirve
+
+//*************************************************************************/
 
 router.delete('/notas/delete/:id', isAuthenticated, async(req, res) => {
     await Note.findByIdAndDelete(req.params.id);
