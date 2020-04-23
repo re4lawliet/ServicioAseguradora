@@ -11,6 +11,10 @@ const VehiculoSchema = new Schema(
             type: String,
             required: true
         },
+        estado: {
+            type: Number,
+            required: true
+        },
         tipo: {
             type: String,
             required: true
@@ -28,19 +32,40 @@ const VehiculoSchema = new Schema(
         placa: {
             type: String
         },
+        color: {
+            type: String
+        },
+        arranca: {
+            type: Boolean
+        },
+        camina: {
+            type: Boolean
+        },
+        fallas_mecanica: {
+            type: Boolean
+        },
+        garantia_inspeccion: {
+            type: Boolean
+        },
+        inundado: {
+            type: Boolean
+        },
+        colision: {
+            type: Boolean
+        },
         chasis: {
             type: String
         },
         motor: {
             type: String
         },
-        color: {
-            type: String
-        },
         direccion: {
             type: String
         },
-        estado: {
+        subastable: {
+            type: Boolean
+        },
+        nombre: {
             type: String
         },
         date: {

@@ -1,3 +1,4 @@
+<h1><font color="white">Listado de Vehiculos</font></h1>
 <div class="row">
   {{#each vehiculos2 }}
     <div class="col-md-3">
@@ -12,7 +13,7 @@
             <!-- DELETE REQUEST -->
             <form action="/vehiculos/delete/{{_id}}?_method=DELETE" method="POST">
             <input type="hidden" name="_method" value="DELETE">
-            <button type="submit" class="btn btn-danger btn-block btn-sm">Delete</button>
+            <button type="submit" class="btn btn-danger btn-block btn-sm">Eliminar Vehiculo</button>
             </form>
             
         </div>
