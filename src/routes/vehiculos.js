@@ -12,6 +12,8 @@ const VehiculoGaleria = require('../models/VehiculoGaleria');
 const { isAuthenticated } = require('../helpers/auth');
 const app = express();
 const URL_SERVER='http://localhost:3000/';
+const jwt = require('jsonwebtoken');
+const data = require('../keys.json')
 
 
 //************       Metodos de Funcionalidad   *************************/
@@ -35,7 +37,7 @@ router.post('/vehiculos/crear_vehiculo', async(req, res) => {
         });
     }else{
         const new_vehiculo = new Vehiculo();
-        new_vehiculo.id_ajustador = req.user.id;
+        new_vehiculo.id_ajustador = globalUser;
         new_vehiculo.id_aseguradora = 'id_aseguradora';
         new_vehiculo.estado=estado;
         new_vehiculo.tipo = tipo;
@@ -63,8 +65,8 @@ router.post('/vehiculos/crear_vehiculo', async(req, res) => {
 });
 
 router.get('/vehiculos/all',  async(req, res) => {
-    /*
-    const vehiculos = await Vehiculo.find({id_ajustador: req.user.id}).sort({date:'desc'})
+    
+    const vehiculos = await Vehiculo.find({id_ajustador: globalUser}).sort({date:'desc'})
     const vehiculos2=[];
     
     for(var v in vehiculos){
@@ -78,8 +80,28 @@ router.get('/vehiculos/all',  async(req, res) => {
     res.render('vehiculos/all_vehiculos.hbs', { 
         vehiculos2 
     });
-    */
-    const URL=URL_SERVER+"vehiculo/";
+    
+   /*
+   const token = await fetch("http://35.193.70.253/GetToken?client_id=123456789123456789&password=subastas123**", {
+    method: "get",
+    headers: { "Content-Type": "application/json" },
+    timeout: 3000,
+    })
+    .then((res) => res.json())
+    .catch(function (err) {
+    return res
+        .status(500)
+        .json({ estado: 500, mensaje: "Tiempo de respuesta exedido." });
+    });
+
+    if(!token){
+        return res.status(401).json({
+            auth: false,
+            mensaje: 'No hay Token'
+        });
+    }
+
+    const URL=URL_SERVER+"vehiculo?jwt="+token.token;
     fetch(URL, {
         method: "get",
         headers: { "Content-Type": "application/json" },
@@ -94,7 +116,7 @@ router.get('/vehiculos/all',  async(req, res) => {
         .status(500)
         .json({ estado: 500, mensaje: "Tiempo de respuesta exedido." });
     });
-    
+    */
 });
 
 router.get('/vehiculos/edit/:id',  async(req, res) => {
@@ -146,10 +168,28 @@ router.get('/vehiculos/ver/:id', async(req, res) => {
         vehiculos2,
         galeria2 
     });*/
+    const token = await fetch("http://35.193.70.253/GetToken?client_id=123456789123456789&password=subastas123**", {
+    method: "get",
+    headers: { "Content-Type": "application/json" },
+    timeout: 3000,
+    })
+    .then((res) => res.json())
+    .catch(function (err) {
+    return res
+        .status(500)
+        .json({ estado: 500, mensaje: "Tiempo de respuesta exedido." });
+    });
+
+    if(!token){
+        return res.status(401).json({
+            auth: false,
+            mensaje: 'No hay Token'
+        });
+    }
 
     const id_vehiculo=req.params.id;
-    const URL_GALERIA = URL_SERVER+"foto/"+id_vehiculo;
-    const URL_VEHICULOS=URL_SERVER+"vehiculo/"+id_vehiculo;
+    const URL_GALERIA = URL_SERVER+"foto?id="+id_vehiculo+'&jwt='+token.id;
+    const URL_VEHICULOS=URL_SERVER+"vehiculo?id="+id_vehiculo+"&jwt="+token.id;
     
     fetch(URL_GALERIA, {
         method: "get",
@@ -171,18 +211,16 @@ router.get('/vehiculos/ver/:id', async(req, res) => {
         .catch(function (err) {
         return res
             .status(500)
-            .json({ estado: 500, mensaje: "Tiempo de respuesta exedido." });
+            .json({ estado: 500, mensaje: "Fallo en Recepcion de Vehiculo" });
         })
 
     )
     .catch(function (err) {
       return res
         .status(500)
-        .json({ estado: 500, mensaje: "Tiempo de respuesta exedido." });
+        .json({ estado: 500, mensaje: "Fallo Recepcion de Galeria de Fotos" });
     });
 
-    console.log(x);
-    res.send(x);
 
 });
 
@@ -194,39 +232,49 @@ router.delete('/vehiculos/delete/:id', async(req, res) => {
 
 //************       Metodos de Servicio     ******************************/
 
-router.get('/vehiculo/:id?/:placa?/:estado?', async(req, res) => {
-
-    /*
-    if(!req.params.placa){
+//Parametros [jwt:,id?,placa?,estado?]
+router.get('/vehiculo', async(req, res) => {
+    
+    if(!req.query.jwt){
         res.send('El JWT no es válido o no contiene el scope de este servicio').status(403);
-    }*/
-    let consulta = {};
-    if(req.params.id){
-        consulta._id=req.params.id;
-    }
-    if(req.params.placa){
-        consulta.placa=req.params.placa;
-    }
-    if(req.params.estado){
-        consulta.estado=req.params.estado;
     }
 
+    let consulta = {};
+    if(req.query.id){
+        consulta._id=req.query.id;
+    }
+    if(req.query.placa){
+        consulta.placa=req.query.placa;
+    }
+    if(req.query.estado){
+        consulta.estado=req.query.estado;
+    }
+   
     const vehiculos = await Vehiculo.find(consulta).sort({date:'desc'});
     res.send(vehiculos).status(200);
+    
+    
 
 });//Sirve arreglo de vehiculos
 
-router.get('/foto/:id?/:externa?', async(req, res) => {
+//Parametros [jwt:,id:,externa?]
+router.get('/foto', async(req, res) => {
 
-    const idd=req.params.id;
+    
+    if(!req.query.jwt){
+        res.send('El JWT no es válido o no contiene el scope de este servicio').status(403);
+    }
+
+    const idd=req.query.id;
     if(!idd){
         res.send('El id No existe 404').status(404);
     }
     let consulta = {};
     consulta.id_vehiculo=idd;
-    if(req.params.externa){
-        consulta.estado=req.params.externa;
+    if(req.query.externa){
+        consulta.estado=req.query.externa;
     }
+
     const fotos = await VehiculoGaleria.find(consulta);
     res.send(fotos).status(200);
 
@@ -254,5 +302,20 @@ router.get('/vehiculos/all3', async(req, res) => {
     
 }); //Consumidor Ejemplo
 
+router.get('/vertoken', async(req, res) => {
+
+    const x = await fetch("http://35.193.70.253/GetToken?client_id=123456789123456789&password=subastas123**", {
+        method: "get",
+        headers: { "Content-Type": "application/json" },
+        timeout: 3000,
+    })
+    .then((res) => res.json())
+    .catch(function (err) {
+      return res
+        .status(500)
+        .json({ estado: 500, mensaje: "Tiempo de respuesta exedido." });
+    });
+    
+}); 
 
 module.exports = router;
