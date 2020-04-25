@@ -3,13 +3,13 @@ const LocalStrategy = require('passport-local').Strategy;
 const fetch = require('node-fetch');
 
 const User = require('../models/User'); 
-const URL_SERVER='http://localhost:3001/';
+const URL_SERVER='http://35.232.205.249/';
 
 passport.use(new LocalStrategy({
   usernameField: 'email'
 }, async (email, password, done) => {
   
-  
+  /*
   // Match Email's User
   const user = await User.findOne({email: email});
   if (!user) {
@@ -23,10 +23,7 @@ passport.use(new LocalStrategy({
     } else {
       return done(null, false, { message: 'Incorrect Password.' });
     }
-  }
-  
-
-  /*
+  }*/
       //console.log(email+"::::::"+password);
       const URL=URL_SERVER+"afiliado?jwt=asd"+"&codigo="+email+"&password="+password;
       const datos=await fetch(URL, {
@@ -63,7 +60,7 @@ passport.use(new LocalStrategy({
                 }
         }
       }
-      */
+      
 }));
 
 passport.serializeUser((user, done) => {

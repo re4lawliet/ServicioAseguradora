@@ -142,7 +142,7 @@ router.post('/subir/:id', upload.single('foto1'), async(req,res) =>{
 });
 
 router.get('/vehiculos/ver/:id', async(req, res) => {
-    /*
+    
     const galeria = await VehiculoGaleria.find({id_vehiculo: req.params.id}).sort({date:'desc'})
     const galeria2=[];
 
@@ -156,7 +156,7 @@ router.get('/vehiculos/ver/:id', async(req, res) => {
             chasis:vehiculos[v].chasis, motor:vehiculos[v].motor, color:vehiculos[v].color,
             direccion: vehiculos[v].direccion
         });
-    }/
+    }
 
     for(var g in galeria){
         galeria2.push({
@@ -167,7 +167,8 @@ router.get('/vehiculos/ver/:id', async(req, res) => {
     res.render('vehiculos/see_vehiculos.hbs', { 
         vehiculos2,
         galeria2 
-    });*/
+    });
+    /*
     const token = await fetch("http://35.193.70.253/GetToken?client_id=123456789123456789&password=subastas123**", {
     method: "get",
     headers: { "Content-Type": "application/json" },
@@ -220,7 +221,7 @@ router.get('/vehiculos/ver/:id', async(req, res) => {
         .status(500)
         .json({ estado: 500, mensaje: "Fallo Recepcion de Galeria de Fotos" });
     });
-
+    */
 
 });
 
@@ -276,7 +277,15 @@ router.get('/foto', async(req, res) => {
     }
 
     const fotos = await VehiculoGaleria.find(consulta);
-    res.send(fotos).status(200);
+    const fotos_retorno=[];
+    
+    for(var f in fotos){
+        fotos_retorno.push({
+            id: fotos[f]._id, url:fotos[f].foto
+            });
+    }
+
+    res.send(fotos_retorno).status(200);
 
 });//Sirve Fotos
 
