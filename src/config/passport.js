@@ -9,7 +9,7 @@ passport.use(new LocalStrategy({
   usernameField: 'email'
 }, async (email, password, done) => {
   
-  /*
+  
   // Match Email's User
   const user = await User.findOne({email: email});
   if (!user) {
@@ -18,13 +18,15 @@ passport.use(new LocalStrategy({
     // Match Password's User
     const match = await user.matchPassword(password);
     if(match) {
+      globalUser=user._id; 
       return done(null, user);
     } else {
       return done(null, false, { message: 'Incorrect Password.' });
     }
   }
-  */
+  
 
+  /*
       //console.log(email+"::::::"+password);
       const URL=URL_SERVER+"afiliado?jwt=asd"+"&codigo="+email+"&password="+password;
       const datos=await fetch(URL, {
@@ -61,7 +63,7 @@ passport.use(new LocalStrategy({
                 }
         }
       }
-
+      */
 }));
 
 passport.serializeUser((user, done) => {
