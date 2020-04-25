@@ -33,13 +33,13 @@ passport.use(new LocalStrategy({
       })
       .then((res) => res.json())
       .catch(function (err) {
-      });
-
+      }); 
+      console.log(datos);
       if(!datos){
         console.log('Falla En Autenticacion');
         return done(null, false, { message: 'Falla En Autenticacion' });
       }else{
-        if(datos[0].rol!="ajustador"){
+        if(datos.rol!="ajustador"){
           console.log('Falla En Autenticacion Usuario debe ser Ajustador');
           return done(null, false, { message: 'Falla En Autenticacion Usuario debe ser Ajustador' });
         }else{
@@ -52,7 +52,7 @@ passport.use(new LocalStrategy({
                   const match = await user.matchPassword('123456');
                   if(match) {      
                     //console.log('Entra');
-                    globalUser=datos[0]._id; 
+                    globalUser=datos.codigo; 
                     return done(null, user);
                   } else {
                     return done(null, false, { message: 'Incorrect Password.' });
