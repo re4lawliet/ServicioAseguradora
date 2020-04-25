@@ -3,6 +3,7 @@ jobs:
   build:
     docker:
       - image: circleci/node
+      - image: mongo:4.2.5
     steps:
       - checkout
       - add_ssh_keys:
