@@ -21,7 +21,7 @@ router.get('/users/form_registro', function(req, res){
 });
 router.post('/users/registro', async(req, res) => {
     
-    const{ name, email, password, confirm_password } = req.body;
+    const{ name, email, password, confirm_password, aseguradora } = req.body;
     const errors=[];
 
     if(password != confirm_password){
@@ -43,7 +43,8 @@ router.post('/users/registro', async(req, res) => {
             errors.push({text:'El Usuario ya esta en Uso',});
             res.render('users/registro.hbs', {errors});
         }else{
-            const newuser = new User({ name, email, password });
+            const newuser = new User({ name, email, password, aseguradora  });
+            newuser.rol='ajustador';
             newuser.password = await newuser.encryptPassword(password);
             await newuser.save();
             req.flash('succes_msg', 'User Agregado con Exito');

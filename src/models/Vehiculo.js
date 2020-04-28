@@ -62,10 +62,22 @@ const VehiculoSchema = new Schema(
         direccion: {
             type: String
         },
+        precio_base: {
+            type: Number
+        },
+        minimo_requerido: {
+            type: Number
+        },
         subastable: {
             type: Boolean
         },
-        nombre: {
+        nombre_estado: {
+            type: String
+        },
+        afiliado_adjudicado: {
+            type: String
+        },
+        valor_adjudicacion: {
             type: String
         },
         date: {

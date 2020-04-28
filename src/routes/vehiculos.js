@@ -9,6 +9,7 @@ const upload = require('../config/storage');
 
 const Vehiculo = require('../models/Vehiculo');
 const VehiculoGaleria = require('../models/VehiculoGaleria');
+const Estado = require('../models/Estado');
 const { isAuthenticated } = require('../helpers/auth');
 const app = express();
 const URL_SERVER='http://localhost:3000/';
@@ -27,7 +28,7 @@ router.post('/vehiculos/crear_vehiculo', async(req, res) => {
     const{ 
         estado,tipo,marca,linea,modelo,placa,color,arranca,camina,
         falla_mecanica,garantia_inspeccion,inundado,colision,chasis,
-        motor,direccion 
+        motor,direccion,precio_base, minimo_requerido
     } = req.body;
     const errors=[];
     
@@ -38,7 +39,7 @@ router.post('/vehiculos/crear_vehiculo', async(req, res) => {
     }else{
         const new_vehiculo = new Vehiculo();
         new_vehiculo.id_ajustador = globalUser;
-        new_vehiculo.id_aseguradora = 'id_aseguradora';
+        new_vehiculo.id_aseguradora = globalAseguradora;
         new_vehiculo.estado=estado;
         new_vehiculo.tipo = tipo;
         new_vehiculo.marca = marca;
@@ -55,8 +56,20 @@ router.post('/vehiculos/crear_vehiculo', async(req, res) => {
         new_vehiculo.chasis = chasis;
         new_vehiculo.motor = motor;
         new_vehiculo.direccion = direccion;
-        new_vehiculo.subastable = true;
-        new_vehiculo.nombre = 'Inspeccion';
+        new_vehiculo.precio_base=precio_base;
+        new_vehiculo.minimo_requerido=minimo_requerido;
+        new_vehiculo.subastable = false;
+        new_vehiculo.afiliado_adjudicado="null";
+        new_vehiculo.valor_adjudicacion="null"
+
+        if(estado==1){
+            new_vehiculo.nombre_estado = 'Tránsito';
+        }else if(estado==2){
+            new_vehiculo.nombre_estado = 'Almacenaje';
+        }else{
+            new_vehiculo.nombre_estado = 'Subastable';
+        }
+        
 
         await new_vehiculo.save();
         req.flash('succes_msg', 'Vehiculo Agregado con Exito');
@@ -74,7 +87,8 @@ router.get('/vehiculos/all',  async(req, res) => {
             _id: vehiculos[v]._id, tipo:vehiculos[v].tipo, marca:vehiculos[v].marca,
             linea:vehiculos[v].linea, modelo:vehiculos[v].modelo, placa:vehiculos[v].placa,
             chasis:vehiculos[v].chasis, motor:vehiculos[v].motor, color:vehiculos[v].color,
-            direccion: vehiculos[v].direccion
+            direccion: vehiculos[v].direccion, id_aseguradora:vehiculos[v].id_aseguradora,
+            nombre_estado: vehiculos[v].nombre_estado
             });
     }
     res.render('vehiculos/all_vehiculos.hbs', { 
@@ -133,7 +147,7 @@ router.post('/subir/:id', upload.single('foto1'), async(req,res) =>{
 
     const new_imagen = new VehiculoGaleria();
     new_imagen.id_vehiculo = req.params.id;
-    new_imagen.foto = req.file.originalname;
+    new_imagen.foto = 'http://34.70.210.93/img/'+req.file.originalname;
     new_imagen.estado = req.body.foto1_e;
     await new_imagen.save();
 
@@ -154,7 +168,9 @@ router.get('/vehiculos/ver/:id', async(req, res) => {
             _id: vehiculos[v]._id, tipo:vehiculos[v].tipo, marca:vehiculos[v].marca,
             linea:vehiculos[v].linea, modelo:vehiculos[v].modelo, placa:vehiculos[v].placa,
             chasis:vehiculos[v].chasis, motor:vehiculos[v].motor, color:vehiculos[v].color,
-            direccion: vehiculos[v].direccion
+            direccion: vehiculos[v].direccion, precio_base: vehiculos[v].precio_base,
+            minimo_requerido: vehiculos[v].minimo_requerido, id_aseguradora: vehiculos[v].id_aseguradora,
+            nombre_estado: vehiculos[v].nombre_estado
         });
     }
 
@@ -231,6 +247,110 @@ router.delete('/vehiculos/delete/:id', async(req, res) => {
     res.redirect('/vehiculos/all');
 });
 
+router.get('/vehiculos/nuevo_estado', (req, res) => {
+    res.render('vehiculos/new_estado.hbs');
+});
+
+router.post('/vehiculos/creando_estado', async(req, res) => {
+    
+    const{ id, nombre, subastable} = req.body;
+    const errors=[];
+    
+    if(errors.length>0){
+        res.render('vehiculos/new_vehiculo.hbs', {
+            errors
+        });
+    }else{
+        const new_estado = new Estado();
+        new_estado.id = id;
+        new_estado.nombre = nombre;
+        new_estado.subastable=subastable;
+        await new_estado.save();
+        req.flash('succes_msg', 'Estado Agregado con Exito');
+        res.redirect('/vehiculos/all');
+    }
+});
+
+router.get('/vehiculos/all_inventario',  async(req, res) => {
+    
+    const vehiculos = await Vehiculo.find({id_aseguradora: globalAseguradora});
+    const vehiculos2=[];
+    
+    for(var v in vehiculos){
+        vehiculos2.push({
+            _id: vehiculos[v]._id, tipo:vehiculos[v].tipo, marca:vehiculos[v].marca,
+            linea:vehiculos[v].linea, modelo:vehiculos[v].modelo, placa:vehiculos[v].placa,
+            chasis:vehiculos[v].chasis, motor:vehiculos[v].motor, color:vehiculos[v].color,
+            direccion: vehiculos[v].direccion, id_aseguradora:vehiculos[v].id_aseguradora,
+            nombre_estado: vehiculos[v].nombre_estado
+            });
+    }
+    res.render('vehiculos/all_vehiculos_inventario.hbs', { 
+        vehiculos2 
+    });
+    
+});
+
+router.get('/vehiculos/cambio_estado1/:id', async(req, res) => {
+    
+    const vehiculo=await Vehiculo.findById(req.params.id);
+    vehiculo.estado=1;
+    vehiculo.nombre_estado="Tránsito";
+    vehiculo.subastable=false;
+    await vehiculo.save();
+
+    req.flash('succes_msg','Cambio a Estado Tránsito');
+    res.redirect('/vehiculos/all');
+});
+
+router.get('/vehiculos/cambio_estado2/:id', async(req, res) => {
+    
+    const vehiculo=await Vehiculo.findById(req.params.id);
+    vehiculo.estado=2;
+    vehiculo.nombre_estado="Almacenaje";
+    vehiculo.subastable=true;
+    await vehiculo.save();
+
+    req.flash('succes_msg','Cambio a Estado Almacenaje');
+    res.redirect('/vehiculos/all');
+});
+
+router.get('/vehiculos/cambio_estado3/:id', async(req, res) => {
+    
+    const vehiculo=await Vehiculo.findById(req.params.id);
+    vehiculo.estado=3;
+    vehiculo.nombre_estado="Subastable";
+    vehiculo.subastable=true;
+    await vehiculo.save();
+
+    req.flash('succes_msg','Cambio a Estado Subastable');
+    res.redirect('/vehiculos/all');
+});
+
+router.get('/vehiculos/cambio_estado4/:id', async(req, res) => {
+    
+    const vehiculo=await Vehiculo.findById(req.params.id);
+    vehiculo.estado=4;
+    vehiculo.nombre_estado="Adjudicado";
+    vehiculo.subastable=false;
+    await vehiculo.save();
+
+    req.flash('succes_msg','Cambio a Estado Adjudicado');
+    res.redirect('/vehiculos/all');
+});
+
+router.get('/vehiculos/cambio_estado5/:id', async(req, res) => {
+    
+    const vehiculo=await Vehiculo.findById(req.params.id);
+    vehiculo.estado=5;
+    vehiculo.nombre_estado="Vendido";
+    vehiculo.subastable=false;
+    await vehiculo.save();
+
+    req.flash('succes_msg','Cambio a Estado Vendido');
+    res.redirect('/vehiculos/all');
+});
+
 //************       Metodos de Servicio     ******************************/
 
 //Parametros [jwt:,id?,placa?,estado?]
@@ -288,6 +408,38 @@ router.get('/foto', async(req, res) => {
     res.send(fotos_retorno).status(200);
 
 });//Sirve Fotos
+
+//Parametros [jwt:,id?]
+router.get('/estado', async(req, res) => {
+
+    
+    if(!req.query.jwt){
+        res.send('El JWT no es válido o no contiene el scope de este servicio').status(403);
+    }
+
+    const idd=req.query.id;
+  
+    let consulta = {};
+    if(idd){
+        consulta.id=idd;
+    }
+
+    const estado = await Estado.find(consulta);
+    //console.log(estado);
+    const estado_retorno=[];
+    
+    for(var e in estado){
+        estado_retorno.push({
+            id: estado[e].id, nombre:estado[e].nombre, subastable: estado[e].subastable
+            });
+    }
+
+    res.send(estado_retorno).status(200);
+
+});//Sirve Estados
+
+
+
 
 
 //*************************************************************************/

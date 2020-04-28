@@ -1,0 +1,51 @@
+<h1><font color="white">Inventario Por Aseguradora</font></h1>
+<div class="row">
+    <center>
+        <!-- Tabla  -->
+        <div class="col-sm-10">
+            <!-- si el resultado de la consulta es mayor a 0-->
+            
+                <div class="panel panel-default">
+                    <h2>Listado De Vehiculos</h2>
+                </div>
+                <br>
+                <div class="panel-body"></div>
+                    <table id="tabla_pedidos" class="table table-striped rwd-table" background="#34495E" color="#fff">
+                        <!-- Encabezado de Tabla -->
+                        <thead>
+                            <th >Tipo</th>
+                            <th>Marca</th>
+                            <th>Linea</th>
+                            <th>Modelo</th>
+                            <th>Placa</th>
+                            <th>Motor</th>
+                            <th>Color</th>
+                            <th>Aseguradora</th>
+                            <th>Estado</th>
+                            
+
+                        </thead>
+                        <!-- Cuerpo de Tabla -->
+                        <tbody>
+                        {{#each vehiculos2 }}
+                            <tr>
+                                <td class="active"><div>{{ tipo }}</div></td>
+                                <td class="table-text"><div>{{ marca }}</div></td>
+                                <td class="table-text"><div>{{ linea }}</div></td>
+                                <td class="table-text"><div>{{ modelo }}</div></td>
+                                <td class="table-text"><div>{{ placa }}</div></td>
+                                <td class="table-text"><div>{{ motor }}</div></td>
+                                <td class="table-text"><div>{{ color }}</div></td>
+                                <td class="table-text"><div>{{ id_aseguradora }}</div></td>
+                                <td class="table-text"><div>{{ nombre_estado }}</div></td>
+
+                            </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+           
+        </div>
+
+    </center>
+</div>

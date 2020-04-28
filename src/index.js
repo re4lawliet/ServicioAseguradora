@@ -46,6 +46,7 @@ app.use((req, res, next) => {
     next();
 });
 global.globalUser = "User";
+global.globalAseguradora="Aseguradora";
 
 // Routes
 app.use(require('./routes/index.js'));

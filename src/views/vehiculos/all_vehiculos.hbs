@@ -1,4 +1,4 @@
-<h1><font color="white">Listado de Vehiculos</font></h1>
+<h1><font color="white">Inventario Por Usuario</font></h1>
 <div class="row">
   {{#each vehiculos2 }}
     <div class="col-md-3">
@@ -8,8 +8,27 @@
             {{ tipo }},{{ marca }} <a href="/vehiculos/edit/{{_id}}"><i class="fas fa-camera"></i></a>                
             </h4>
             <a href="/vehiculos/ver/{{_id}}"><i class="fas fa-image"></i></a>
-           
-            <p> {{ color }},{{ modelo }}, {{ motor }},{{ placa }} </p>
+            
+            </button>
+             <button type="submit" class="btn btn-primary" onclick="location.href='/vehiculos/cambio_estado1/{{_id}}'">
+            <i class="fa fa-btn fa-pencil"></i>1
+            </button>
+            <button type="submit" class="btn btn-primary" onclick="location.href='/vehiculos/cambio_estado2/{{_id}}'">
+            <i class="fa fa-btn fa-pencil"></i>2
+            </button>
+            <button type="submit" class="btn btn-primary" onclick="location.href='/vehiculos/cambio_estado3/{{_id}}'">
+            <i class="fa fa-btn fa-pencil"></i>3
+            </button>
+            <button type="submit" class="btn btn-primary" onclick="location.href='/vehiculos/cambio_estado4/{{_id}}'">
+            <i class="fa fa-btn fa-pencil"></i>4
+            </button>
+            <button type="submit" class="btn btn-primary" onclick="location.href='/vehiculos/cambio_estado5/{{_id}}'">
+            <i class="fa fa-btn fa-pencil"></i>5
+            </button>     
+            <p> 
+            {{ color }},{{ modelo }}, {{ motor }},{{ placa }}, <b>Seguros:</b> {{id_aseguradora}}, <b>Estado:</b> {{nombre_estado}} 
+
+            </p>
             <!-- DELETE REQUEST -->
             <form action="/vehiculos/delete/{{_id}}?_method=DELETE" method="POST">
             <input type="hidden" name="_method" value="DELETE">
