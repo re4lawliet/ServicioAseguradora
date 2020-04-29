@@ -378,7 +378,7 @@ router.get('/vehiculo', async(req, res) => {
 
 });//Sirve arreglo de vehiculos
 
-//Parametros [jwt:,id:,externa?]
+//Parametros [jwt:,id?,externa?]
 router.get('/foto', async(req, res) => {
 
     
@@ -386,12 +386,10 @@ router.get('/foto', async(req, res) => {
         res.send('El JWT no es válido o no contiene el scope de este servicio').status(403);
     }
 
-    const idd=req.query.id;
-    if(!idd){
-        res.send('El id No existe 404').status(404);
-    }
     let consulta = {};
-    consulta.id_vehiculo=idd;
+    if(req.query.id){
+        consulta.id_vehiculo=req.query.id;
+    }
     if(req.query.externa){
         consulta.estado=req.query.externa;
     }
