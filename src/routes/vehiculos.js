@@ -14,7 +14,8 @@ const { isAuthenticated } = require('../helpers/auth');
 const app = express();
 const URL_SERVER='http://localhost:3000/';
 const jwt = require('jsonwebtoken');
-const data = require('../keys.json')
+const data = require('../keys.json');
+const KEY="201314646";
 
 
 //************       Metodos de Funcionalidad   *************************/
@@ -360,21 +361,34 @@ router.get('/vehiculo', async(req, res) => {
         res.send('El JWT no es válido o no contiene el scope de este servicio').status(403);
     }
 
-    let consulta = {};
-    if(req.query.id){
-        consulta._id=req.query.id;
-    }
-    if(req.query.placa){
-        consulta.placa=req.query.placa;
-    }
-    if(req.query.estado){
-        consulta.estado=req.query.estado;
-    }
-   
-    const vehiculos = await Vehiculo.find(consulta).sort({date:'desc'});
-    res.send(vehiculos).status(200);
+    //Validacion del Toquen
+    const validaToken=true;
+    const token=req.query.jwt;
+    jwt.verify(token, KEY, (err, data) => {
+        if(err){
+            console.log('El JWT no es válido');
+            alidaToken=false;
+            res.send('El JWT no es válido').status(403);
+            
+        }     
+    });
+
+    if(validaToken){
+
+        let consulta = {};
+        if(req.query.id){
+            consulta._id=req.query.id;
+        }
+        if(req.query.placa){
+            consulta.placa=req.query.placa;
+        }
+        if(req.query.estado){
+            consulta.estado=req.query.estado;
+        }
     
-    
+        const vehiculos = await Vehiculo.find(consulta).sort({date:'desc'});
+        res.send(vehiculos).status(200);
+    }
 
 });//Sirve arreglo de vehiculos
 
@@ -386,24 +400,38 @@ router.get('/foto', async(req, res) => {
         res.send('El JWT no es válido o no contiene el scope de este servicio').status(403);
     }
 
-    let consulta = {};
-    if(req.query.id){
-        consulta.id_vehiculo=req.query.id;
-    }
-    if(req.query.externa){
-        consulta.estado=req.query.externa;
-    }
-
-    const fotos = await VehiculoGaleria.find(consulta);
-    const fotos_retorno=[];
+    //Validacion del Toquen
+    const validaToken=true;
+    const token=req.query.jwt;
+    jwt.verify(token, KEY, (err, data) => {
+        if(err){
+            console.log('El JWT no es válido');
+            alidaToken=false;
+            res.send('El JWT no es válido').status(403);
+            
+        }     
+    });
     
-    for(var f in fotos){
-        fotos_retorno.push({
-            id: fotos[f]._id, url:fotos[f].foto
-            });
-    }
+    if(validaToken){
+        let consulta = {};
+        if(req.query.id){
+            consulta.id_vehiculo=req.query.id;
+        }
+        if(req.query.externa){
+            consulta.estado=req.query.externa;
+        }
 
-    res.send(fotos_retorno).status(200);
+        const fotos = await VehiculoGaleria.find(consulta);
+        const fotos_retorno=[];
+        
+        for(var f in fotos){
+            fotos_retorno.push({
+                id: fotos[f]._id, url:fotos[f].foto
+                });
+        }
+
+        res.send(fotos_retorno).status(200);
+    }
 
 });//Sirve Fotos
 
@@ -415,30 +443,40 @@ router.get('/estado', async(req, res) => {
         res.send('El JWT no es válido o no contiene el scope de este servicio').status(403);
     }
 
-    const idd=req.query.id;
+    //Validacion del Toquen
+    const validaToken=true;
+    const token=req.query.jwt;
+    jwt.verify(token, KEY, (err, data) => {
+        if(err){
+            console.log('El JWT no es válido');
+            alidaToken=false;
+            res.send('El JWT no es válido').status(403);
+            
+        }     
+    });
+
+    if(validaToken){
+        const idd=req.query.id;
   
-    let consulta = {};
-    if(idd){
-        consulta.id=idd;
-    }
+        let consulta = {};
+        if(idd){
+            consulta.id=idd;
+        }
 
-    const estado = await Estado.find(consulta);
-    //console.log(estado);
-    const estado_retorno=[];
-    
-    for(var e in estado){
-        estado_retorno.push({
-            id: estado[e].id, nombre:estado[e].nombre, subastable: estado[e].subastable
-            });
-    }
+        const estado = await Estado.find(consulta);
+        //console.log(estado);
+        const estado_retorno=[];
+        
+        for(var e in estado){
+            estado_retorno.push({
+                id: estado[e].id, nombre:estado[e].nombre, subastable: estado[e].subastable
+                });
+        }
 
-    res.send(estado_retorno).status(200);
+        res.send(estado_retorno).status(200);
+    }
 
 });//Sirve Estados
-
-
-
-
 
 //*************************************************************************/
 
