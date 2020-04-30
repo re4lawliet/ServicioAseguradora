@@ -478,6 +478,54 @@ router.get('/estado', async(req, res) => {
 
 });//Sirve Estados
 
+router.put('/vehiculo', async(req, res) => {
+
+    if(!req.body.jwt){
+        res.send('El JWT no es válido o no contiene el scope de este servicio').status(403);
+    }
+
+    //Validacion del Toquen
+    const validaToken=true;
+    const token=req.body.jwt;
+    jwt.verify(token, KEY, (err, data) => {
+        if(err){
+            console.log('El JWT no es válido');
+            alidaToken=false;
+            res.send('El JWT no es válido').status(403);
+            
+        }     
+    });
+
+    if(validaToken){
+        const id=req.body.id;
+        const estado=req.body.estado;
+        const afiliado_adjudicado=req.body.afiliado_adjudicado;
+        const valor_adjudicacion=req.body.valor_adjudicacion;
+
+        if(!id){
+            res.send('ID del vehiculo No Especificado').status(404);
+        }
+        console.log(estado);
+        if(estado!='1' && estado!='2' && estado!='3' && estado!='4' && estado!='5'){
+            res.send('ID Estado no Existe').status(404);
+        }
+        
+        const vehiculoBuscado=await Vehiculo.find({_id: id});
+        if(!vehiculoBuscado){
+            res.send('ID del vehiculo No Existe').status(404);
+        }
+        if(!afiliado_adjudicado&&!valor_adjudicacion){
+            res.send('No Existe Valor Adjudicado ni afiliado adjudicado').status(406);
+        }
+
+        await Vehiculo.findByIdAndUpdate(id, {estado: estado, valor_adjudicacion: valor_adjudicacion, afiliado_adjudicado:afiliado_adjudicado});
+        const objretorno={};
+        objretorno.respuesta=true;
+        res.send(true).status(201);
+    }   
+
+});
+
 //*************************************************************************/
 
 router.get('/vehiculos/all3', async(req, res) => {
