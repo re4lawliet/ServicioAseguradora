@@ -480,6 +480,8 @@ router.get('/estado', async(req, res) => {
 
 router.put('/vehiculo', async(req, res) => {
 
+    //console.log(req.body);
+
     if(!req.body.jwt){
         res.send('El JWT no es válido o no contiene el scope de este servicio').status(403);
     }
@@ -517,11 +519,27 @@ router.put('/vehiculo', async(req, res) => {
         if(!afiliado_adjudicado&&!valor_adjudicacion){
             res.send('No Existe Valor Adjudicado ni afiliado adjudicado').status(406);
         }
+        const nombre_estado='';
+        if(estado=='1'){
+            nombre_estado='Transito';
+        }
+        if(estado=='2'){
+            nombre_estado='Almacenaje';
+        }
+        if(estado=='3'){
+            nombre_estado='Subastable';
+        }
+        if(estado=='4'){
+            nombre_estado='Adjudicado';
+        }
+        if(estado=='5'){
+            nombre_estado='Vendido';
+        }
 
-        await Vehiculo.findByIdAndUpdate(id, {estado: estado, valor_adjudicacion: valor_adjudicacion, afiliado_adjudicado:afiliado_adjudicado});
+        await Vehiculo.findByIdAndUpdate(id, {estado: estado, valor_adjudicacion: valor_adjudicacion, afiliado_adjudicado:afiliado_adjudicado, nombre_estado: nombre_estado});
         const objretorno={};
         objretorno.respuesta=true;
-        res.send(true).status(201);
+        res.send(true).status(200);
     }   
 
 });
@@ -562,5 +580,15 @@ router.get('/vertoken', async(req, res) => {
     });
     
 }); 
+
+router.put('/rutita', async(req, res) => {
+
+    console.log(req.body);
+    const x=JSON.stringify({ x: 5, y: 6 });
+
+    res.json({
+        x
+    }).status(200);
+});
 
 module.exports = router;
