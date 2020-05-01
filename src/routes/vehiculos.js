@@ -387,7 +387,9 @@ router.get('/vehiculo', async(req, res) => {
         }
     
         const vehiculos = await Vehiculo.find(consulta).sort({date:'desc'});
-        res.send(vehiculos).status(200);
+        const retorno=JSON.stringify({response:vehiculos});
+        console.log(retorno);
+        res.send(retorno).status(200);
     }
 
 });//Sirve arreglo de vehiculos
@@ -430,7 +432,9 @@ router.get('/foto', async(req, res) => {
                 });
         }
 
-        res.send(fotos_retorno).status(200);
+        const retorno=JSON.stringify({response:fotos_retorno});
+        console.log(fotos_retorno);
+        res.send(retorno).status(200);
     }
 
 });//Sirve Fotos
