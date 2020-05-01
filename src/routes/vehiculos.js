@@ -468,7 +468,7 @@ router.get('/foto', async(req, res) => {
         
         for(var f in fotos){
             fotos_retorno.push({
-                id: fotos[f]._id, url:fotos[f].foto
+                id: fotos[f]._id, url:fotos[f].foto, id_vehiculo: fotos[f].id_vehiculo
                 });
         }
 
