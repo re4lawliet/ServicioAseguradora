@@ -588,9 +588,9 @@ router.put('/vehiculo', async(req, res) => {
             nombre_estado='Vendido';
         }
         //valor adjudicacion se lo sumo al precio base
-        var minimo=parseInt(vehiculoBuscado[0].minimo_requerido);
+        var base=parseInt(vehiculoBuscado[0].precio_base);
         var valor_ad=parseInt(valor_adjudicacion);
-        var result=minimo+valor_ad;
+        var result=base+valor_ad;
 
         await Vehiculo.findByIdAndUpdate(id, {estado: estado, valor_adjudicacion: valor_adjudicacion, afiliado_adjudicado:afiliado_adjudicado, nombre_estado: nombre_estado, precio_base: result});
         const objretorno={};
