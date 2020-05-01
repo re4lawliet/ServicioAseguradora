@@ -352,6 +352,46 @@ router.get('/vehiculos/cambio_estado5/:id', async(req, res) => {
     res.redirect('/vehiculos/all');
 });
 
+router.get('/vehiculos/modificar/:id', isAuthenticated, async(req, res) => {
+    const note1 = await Vehiculo.findById(req.params.id);
+    const note=[];
+    note.push({
+        id: note1._id
+    });
+    res.render('vehiculos/mod_vehiculo.hbs', {note});
+});
+
+router.put('/vehiculos/modificar_vehiculo/:id', async(req, res) => {
+    const{ 
+        estado,tipo,marca,linea,modelo,placa,color,arranca,camina,
+        falla_mecanica,garantia_inspeccion,inundado,colision,chasis,
+        motor,direccion,precio_base, minimo_requerido
+    } = req.body;
+
+    await Vehiculo.findByIdAndUpdate(req.params.id, {
+        estado: estado,
+        tipo:tipo,
+        marca: marca,
+        linea: linea,
+        modelo: modelo,
+        placa: placa,
+        color: color, 
+        arranca: arranca,
+        camina: camina,
+        falla_mecanica: falla_mecanica,
+        garantia_inspeccion: garantia_inspeccion,
+        inundado: inundado,
+        colision: colision,
+        chasis: chasis,
+        motor: motor,
+        direccion: direccion,
+        precio_base: precio_base,
+        minimo_requerido: minimo_requerido
+    });
+    req.flash('succes_msg','Se a Actualizado Vehiculo');
+    res.redirect('/vehiculos/all');
+});
+
 //************       Metodos de Servicio     ******************************/
 
 //Parametros [jwt:,id?,placa?,estado?]
