@@ -61,7 +61,8 @@ router.post('/vehiculos/crear_vehiculo', async(req, res) => {
         new_vehiculo.minimo_requerido=minimo_requerido;
         new_vehiculo.subastable = false;
         new_vehiculo.afiliado_adjudicado="null";
-        new_vehiculo.valor_adjudicacion="null"
+        new_vehiculo.valor_adjudicacion="null";
+        new_vehiculo.id="null";
 
         if(estado==1){
             new_vehiculo.nombre_estado = 'Tránsito';
@@ -70,9 +71,16 @@ router.post('/vehiculos/crear_vehiculo', async(req, res) => {
         }else{
             new_vehiculo.nombre_estado = 'Subastable';
         }
-        
-
         await new_vehiculo.save();
+
+        const vehiculos2 = await Vehiculo.find().sort({date:'desc'})
+        const c=vehiculos2[0]._id;
+
+        const vehiculo3=await Usuario.findById(c);
+        vehiculo3.id=c;
+        await vehiculo3.save();
+
+
         req.flash('succes_msg', 'Vehiculo Agregado con Exito');
         res.redirect('/vehiculos/all');
     }

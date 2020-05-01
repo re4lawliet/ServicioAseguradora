@@ -3,6 +3,9 @@ const { Schema, model } = require("mongoose");
 
 const VehiculoSchema = new Schema(
     {
+        id: {
+            type: String
+        },
         id_ajustador: {
             type: String,
             required: true
