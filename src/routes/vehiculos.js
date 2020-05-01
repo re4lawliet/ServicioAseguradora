@@ -571,7 +571,7 @@ router.put('/vehiculo', async(req, res) => {
         if(!afiliado_adjudicado&&!valor_adjudicacion){
             res.send('No Existe Valor Adjudicado ni afiliado adjudicado').status(406);
         }
-        const nombre_estado='';
+        var nombre_estado='';
         if(estado=='1'){
             nombre_estado='Transito';
         }
@@ -587,8 +587,12 @@ router.put('/vehiculo', async(req, res) => {
         if(estado=='5'){
             nombre_estado='Vendido';
         }
+        //valor adjudicacion se lo sumo al precio base
+        var minimo=parseInt(vehiculoBuscado[0].minimo_requerido);
+        var valor_ad=parseInt(valor_adjudicacion);
+        var result=minimo+valor_ad;
 
-        await Vehiculo.findByIdAndUpdate(id, {estado: estado, valor_adjudicacion: valor_adjudicacion, afiliado_adjudicado:afiliado_adjudicado, nombre_estado: nombre_estado});
+        await Vehiculo.findByIdAndUpdate(id, {estado: estado, valor_adjudicacion: valor_adjudicacion, afiliado_adjudicado:afiliado_adjudicado, nombre_estado: nombre_estado, precio_base: result});
         const objretorno={};
         objretorno.respuesta=true;
         res.send(true).status(200);
