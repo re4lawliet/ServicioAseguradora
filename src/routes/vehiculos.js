@@ -76,7 +76,7 @@ router.post('/vehiculos/crear_vehiculo', async(req, res) => {
         const vehiculos2 = await Vehiculo.find().sort({date:'desc'})
         const c=vehiculos2[0]._id;
 
-        const vehiculo3=await Usuario.findById(c);
+        const vehiculo3=await Vehiculo.findById(c);
         vehiculo3.id=c;
         await vehiculo3.save();
 
