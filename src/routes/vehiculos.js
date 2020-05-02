@@ -294,8 +294,33 @@ router.get('/vehiculos/all_inventario',  async(req, res) => {
             nombre_estado: vehiculos[v].nombre_estado
             });
     }
+
+    const vehiculos3 = await Vehiculo.find({id_aseguradora: globalAseguradora, estado: 3});
+    const vehiculos4=[];
+    
+    for(var v in vehiculos3){
+        vehiculos4.push({
+            _id: vehiculos3[v]._id, tipo:vehiculos3[v].tipo, marca:vehiculos3[v].marca,
+            precio_base:vehiculos3[v].precio_base, minimo_requerido:vehiculos3[v].minimo_requerido, 
+            afiliado_adjudicado:vehiculos3[v].afiliado_adjudicado
+            });
+    }
+
+    const vehiculos5 = await Vehiculo.find({id_aseguradora: globalAseguradora, estado: 5});
+    const vehiculos6=[];
+    
+    for(var v in vehiculos5){
+        vehiculos6.push({
+            _id: vehiculos5[v]._id, tipo:vehiculos5[v].tipo, marca:vehiculos5[v].marca,
+            precio_base:vehiculos5[v].precio_base, minimo_requerido:vehiculos5[v].minimo_requerido, 
+            afiliado_adjudicado:vehiculos5[v].afiliado_adjudicado,linea:vehiculos5[v].linea
+            });
+    }
+
     res.render('vehiculos/all_vehiculos_inventario.hbs', { 
-        vehiculos2 
+        vehiculos2, 
+        vehiculos4,
+        vehiculos6
     });
     
 });

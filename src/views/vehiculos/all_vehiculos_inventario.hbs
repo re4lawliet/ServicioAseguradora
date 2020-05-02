@@ -6,7 +6,7 @@
             <!-- si el resultado de la consulta es mayor a 0-->
             
                 <div class="panel panel-default">
-                    <h2>Listado De Vehiculos</h2>
+                    <font color="white"><h2>Listado De Vehiculos</h2></font>
                 </div>
                 <br>
                 <div class="panel-body"></div>
@@ -44,6 +44,76 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+                <div class="panel panel-default">
+                    <font color="white"><h2>Vehiculos en Subasta</h2></font>
+                </div>
+                <br>
+                <div class="panel-body"></div>
+                    <table id="tabla_pedidos" class="table table-striped rwd-table" background="#34495E" color="#fff">
+                        <!-- Encabezado de Tabla -->
+                        <thead>
+                            <th >Tipo</th>
+                            <th>Marca</th>
+                            <th>Linea</th>
+                            <th>Cod.Afiliado</th>
+                            <th>Precio Base</th>
+                            <th>Minimo Requerido</th>
+                            
+
+                        </thead>
+                        <!-- Cuerpo de Tabla -->
+                        <tbody>
+                        {{#each vehiculos4 }}
+                            <tr>
+                                <td class="active"><div>{{ tipo }}</div></td>
+                                <td class="table-text"><div>{{ marca }}</div></td>
+                                <td class="table-text"><div>{{ linea }}</div></td>
+                                <td class="table-text"><div>{{ afiliado_adjudicado }}</div></td>
+                                <td class="table-text"><div>{{ precio_base }}</div></td>
+                                <td class="table-text"><div>{{ minimo_requerido }}</div></td>
+
+
+                            </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel panel-default">
+                    <font color="white"><h2>Vehiculos Vendidos</h2></font>
+                </div>
+                <br>
+                <div class="panel-body"></div>
+                    <table id="tabla_pedidos" class="table table-striped rwd-table" background="#34495E" color="#fff">
+                        <!-- Encabezado de Tabla -->
+                        <thead>
+                            <th >Tipo</th>
+                            <th>Marca</th>
+                            <th>Linea</th>
+                            <th>Cod.Afiliado</th>
+                            <th>Precio Base</th>
+                            <th>Minimo Requerido</th>
+                            
+
+                        </thead>
+                        <!-- Cuerpo de Tabla -->
+                        <tbody>
+                        {{#each vehiculos6 }}
+                            <tr>
+                                <td class="active"><div>{{ tipo }}</div></td>
+                                <td class="table-text"><div>{{ marca }}</div></td>
+                                <td class="table-text"><div>{{ linea }}</div></td>
+                                <td class="table-text"><div>{{ afiliado_adjudicado }}</div></td>
+                                <td class="table-text"><div>{{ precio_base }}</div></td>
+                                <td class="table-text"><div>{{ minimo_requerido }}</div></td>
+
+
+                            </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+                
            
         </div>
 
