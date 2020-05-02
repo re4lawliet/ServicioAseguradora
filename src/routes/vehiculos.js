@@ -15,7 +15,9 @@ const app = express();
 const URL_SERVER='http://localhost:3000/';
 const jwt = require('jsonwebtoken');
 const data = require('../keys.json');
-const KEY="201314646";
+const fs = require('fs');
+const path = require('path');
+const KEY=fs.readFileSync(path.join(__dirname, '../keys/public.key'), 'utf-8');
 
 
 //************       Metodos de Funcionalidad   *************************/
