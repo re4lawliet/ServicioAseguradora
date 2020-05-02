@@ -59,6 +59,7 @@
                             <th>Cod.Afiliado</th>
                             <th>Precio Base</th>
                             <th>Minimo Requerido</th>
+                            <th>Adjudicar</th>
                             
 
                         </thead>
@@ -72,6 +73,11 @@
                                 <td class="table-text"><div>{{ afiliado_adjudicado }}</div></td>
                                 <td class="table-text"><div>{{ precio_base }}</div></td>
                                 <td class="table-text"><div>{{ minimo_requerido }}</div></td>
+                                <td class="table-text"><div>
+                                    <button type="submit" class="btn btn-primary" onclick="location.href='/vehiculos/cambio_estado5/{{_id}}'">
+                                    <i class="fa fa-btn fa-pencil"></i>Realizar Venta
+                                    </button>    
+                                </div></td>
 
 
                             </tr>
